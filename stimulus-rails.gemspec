@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["pavel.evst@gmail.com"]
   spec.summary       = "A modest JavaScript framework for the HTML you already have"
 
-  #spec.homepage      = "https://github.com/brandonweiss/git-hookshot"
+  spec.homepage      = "https://github.com/Paxa/stimulus-rails"
   spec.license       = "MIT"
 
   spec.files = `git ls-files`.split("\n")
