@@ -1,5 +1,1754 @@
 /*
-Stimulus 1.0.1
+Stimulus 1.1.0
 Copyright © 2018 Basecamp, LLC
  */
-!function(t,e){"object"==typeof exports&&"object"==typeof module?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.Stimulus=e():t.Stimulus=e()}("undefined"!=typeof self?self:this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return t[r].call(o.exports,o,o.exports,e),o.l=!0,o.exports}var n={};return e.m=t,e.c=n,e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=0)}([function(t,e,n){"use strict";function r(t){throw new Error(t)}function o(t){return"window"==t?window:"document"==t?document:void 0}function i(t){return t==window?"window":t==document?"document":void 0}function c(t,e,n){u(t,e).add(n)}function s(t,e,n){u(t,e).delete(n),a(t,e)}function u(t,e){var n=t.get(e);return n||(n=new Set,t.set(e,n)),n}function a(t,e){var n=t.get(e);null!=n&&0==n.size&&t.delete(e)}function l(t){return t.toString().replace(/([A-Z])/g,function(t,e){return"-"+e.toLowerCase()})}function f(t,e){return"["+t+'~="'+e+'"]'}function h(t){return{identifier:t.identifier,controllerConstructor:p(t.controllerConstructor)}}function p(t){var e=I(t);return e.bless(),e}function d(t){var e=t.prototype;m(t).forEach(function(t){return b(e,(n={},n[t+"Target"]={get:function(){var e=this.targets.find(t);if(e)return e;throw new Error('Missing target element "'+this.identifier+"."+t+'"')}},n[t+"Targets"]={get:function(){return this.targets.findAll(t)}},n["has"+v(t)+"Target"]={get:function(){return this.targets.has(t)}},n));var n})}function m(t){var e=y(t);return Array.from(e.reduce(function(t,e){return g(e).forEach(function(e){return t.add(e)}),t},new Set))}function y(t){for(var e=[];t;)e.push(t),t=Object.getPrototypeOf(t);return e}function g(t){var e=t.targets;return Array.isArray(e)?e:[]}function b(t,e){Object.keys(e).forEach(function(n){if(!(n in t)){var r=e[n];Object.defineProperty(t,n,r)}})}function v(t){return t.charAt(0).toUpperCase()+t.slice(1)}Object.defineProperty(e,"__esModule",{value:!0});var E=function(){function t(t,e,n){this.context=t,this.descriptor=e,this.eventTarget=n}return t.prototype.connect=function(){this.eventTarget.addEventListener(this.eventName,this,!1)},t.prototype.disconnect=function(){this.eventTarget.removeEventListener(this.eventName,this,!1)},t.prototype.hasSameDescriptorAs=function(t){return null!=t&&t.descriptor.isEqualTo(this.descriptor)},t.prototype.handleEvent=function(t){this.willBeInvokedByEvent(t)&&this.invokeWithEvent(t)},Object.defineProperty(t.prototype,"eventName",{get:function(){return this.descriptor.eventName},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"method",{get:function(){var t=this.controller[this.methodName];if("function"==typeof t)return t;throw new Error('Action "'+this.descriptor+'" references undefined method "'+this.methodName+'"')},enumerable:!0,configurable:!0}),t.prototype.invokeWithEvent=function(t){try{this.method.call(this.controller,t)}catch(e){this.context.handleError(e,'invoking action "'+this.descriptor+'"',{event:t})}},t.prototype.willBeInvokedByEvent=function(t){var e=t.target;return this.element===e||(!(e instanceof Element&&this.element.contains(e))||this.scope.containsElement(e))},Object.defineProperty(t.prototype,"controller",{get:function(){return this.context.controller},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"methodName",{get:function(){return this.descriptor.methodName},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"element",{get:function(){return this.scope.element},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"scope",{get:function(){return this.context.scope},enumerable:!0,configurable:!0}),t}(),A=/^((.+?)(@(window|document))?->)?(.+?)#(.+)$/,O=function(){function t(t,e,n,r){this.identifier=t,this.eventName=e,this.methodName=n,this.eventTarget=r}return t.forOptions=function(e){return new t(e.identifier||r("Missing identifier in action descriptor"),e.eventName||r("Missing event name in action descriptor"),e.methodName||r("Missing method name in action descriptor"),e.eventTarget||r("Missing event target in action descriptor"))},t.forElementWithInlineDescriptorString=function(e,n){try{var r=this.parseOptionsFromInlineActionDescriptorString(n);return r.eventName=r.eventName||this.getDefaultEventNameForElement(e),r.eventTarget=r.eventTarget||e,t.forOptions(r)}catch(t){throw new Error('Bad action descriptor "'+n+'": '+t.message)}},t.parseOptionsFromInlineActionDescriptorString=function(t){var e=t.trim(),n=e.match(A)||r("Invalid action descriptor syntax");return{identifier:n[5],eventName:n[2],methodName:n[6],eventTarget:o(n[4])}},t.getDefaultEventNameForElement=function(t){return this.defaultEventNames[t.tagName.toLowerCase()](t)},Object.defineProperty(t.prototype,"eventTargetName",{get:function(){return i(this.eventTarget)},enumerable:!0,configurable:!0}),t.prototype.isEqualTo=function(t){return null!=t&&t.identifier==this.identifier&&t.eventName==this.eventName&&t.methodName==this.methodName&&t.eventTarget==this.eventTarget},t.prototype.toString=function(){var t=this.eventTargetName?"@"+this.eventTargetName:"";return""+this.eventName+t+"->"+this.identifier+"#"+this.methodName},t.defaultEventNames={a:function(t){return"click"},button:function(t){return"click"},form:function(t){return"submit"},input:function(t){return"submit"==t.getAttribute("type")?"click":"change"},select:function(t){return"change"},textarea:function(t){return"change"}},t}(),N=function(){function t(t){this.context=t,this.started=!1,this.actions=new Set}return t.prototype.start=function(){this.started||(this.started=!0,this.connectActions())},t.prototype.stop=function(){this.started&&(this.disconnectActions(),this.started=!1)},t.prototype.add=function(t){this.actions.has(t)||(t.connect(),this.actions.add(t))},t.prototype.delete=function(t){this.actions.has(t)&&(this.actions.delete(t),t.disconnect())},t.prototype.connectActions=function(){this.actions.forEach(function(t){return t.connect()})},t.prototype.disconnectActions=function(){this.actions.forEach(function(t){return t.disconnect()})},t}(),j=function(){function t(){this.valuesByKey=new Map}return Object.defineProperty(t.prototype,"values",{get:function(){return Array.from(this.valuesByKey.values()).reduce(function(t,e){return t.concat(Array.from(e))},[])},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"size",{get:function(){return Array.from(this.valuesByKey.values()).reduce(function(t,e){return t+e.size},0)},enumerable:!0,configurable:!0}),t.prototype.add=function(t,e){c(this.valuesByKey,t,e)},t.prototype.delete=function(t,e){s(this.valuesByKey,t,e)},t.prototype.has=function(t,e){var n=this.valuesByKey.get(t);return null!=n&&n.has(e)},t.prototype.hasKey=function(t){return this.valuesByKey.has(t)},t.prototype.hasValue=function(t){return Array.from(this.valuesByKey.values()).some(function(e){return e.has(t)})},t.prototype.getValuesForKey=function(t){var e=this.valuesByKey.get(t);return e?Array.from(e):[]},t.prototype.getKeysForValue=function(t){return Array.from(this.valuesByKey).filter(function(e){e[0];return e[1].has(t)}).map(function(t){var e=t[0];t[1];return e})},t}(),w=this&&this.__extends||function(){var t=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var n in e)e.hasOwnProperty(n)&&(t[n]=e[n])};return function(e,n){function r(){this.constructor=e}t(e,n),e.prototype=null===n?Object.create(n):(r.prototype=n.prototype,new r)}}(),P=function(t){function e(){var e=t.call(this)||this;return e.keysByValue=new Map,e}return w(e,t),Object.defineProperty(e.prototype,"values",{get:function(){return Array.from(this.keysByValue.keys())},enumerable:!0,configurable:!0}),e.prototype.add=function(e,n){t.prototype.add.call(this,e,n),c(this.keysByValue,n,e)},e.prototype.delete=function(e,n){t.prototype.delete.call(this,e,n),s(this.keysByValue,n,e)},e.prototype.hasValue=function(t){return this.keysByValue.has(t)},e.prototype.getKeysForValue=function(t){var e=this.keysByValue.get(t);return e?Array.from(e):[]},e}(j),T=function(){function t(t,e){var n=this;this.element=t,this.started=!1,this.delegate=e,this.elements=new Set,this.mutationObserver=new MutationObserver(function(t){return n.processMutations(t)})}return t.prototype.start=function(){this.started||(this.mutationObserver.observe(this.element,{attributes:!0,childList:!0,subtree:!0}),this.started=!0,this.refresh())},t.prototype.stop=function(){this.started&&(this.mutationObserver.takeRecords(),this.mutationObserver.disconnect(),this.started=!1)},t.prototype.refresh=function(){if(this.started){for(var t=new Set(this.matchElementsInTree()),e=0,n=Array.from(this.elements);e<n.length;e++){var r=n[e];t.has(r)||this.removeElement(r)}for(var o=0,i=Array.from(t);o<i.length;o++){var r=i[o];this.addElement(r)}}},t.prototype.processMutations=function(t){for(var e=0,n=t;e<n.length;e++){var r=n[e];this.processMutation(r)}},t.prototype.processMutation=function(t){"attributes"==t.type?this.processAttributeChange(t.target,t.attributeName):"childList"==t.type&&(this.processRemovedNodes(t.removedNodes),this.processAddedNodes(t.addedNodes))},t.prototype.processAttributeChange=function(t,e){var n=t;this.elements.has(n)?this.delegate.elementAttributeChanged&&this.matchElement(n)?this.delegate.elementAttributeChanged(n,e):this.removeElement(n):this.matchElement(n)&&this.addElement(n)},t.prototype.processRemovedNodes=function(t){for(var e=0,n=Array.from(t);e<n.length;e++){var r=n[e];this.processNode(r,this.removeElement)}},t.prototype.processAddedNodes=function(t){for(var e=0,n=Array.from(t);e<n.length;e++){var r=n[e];this.processNode(r,this.addElement)}},t.prototype.matchElement=function(t){return this.delegate.matchElement(t)},t.prototype.matchElementsInTree=function(t){return void 0===t&&(t=this.element),this.delegate.matchElementsInTree(t)},t.prototype.processNode=function(t,e){var n=this.elementFromNode(t);if(n)for(var r=0,o=this.matchElementsInTree(n);r<o.length;r++){var i=o[r];e.call(this,i)}},t.prototype.elementFromNode=function(t){if(t.nodeType==Node.ELEMENT_NODE)return t},t.prototype.addElement=function(t){this.elements.has(t)||(this.elements.add(t),this.delegate.elementMatched&&this.delegate.elementMatched(t))},t.prototype.removeElement=function(t){this.elements.has(t)&&(this.elements.delete(t),this.delegate.elementUnmatched&&this.delegate.elementUnmatched(t))},t}(),F=(function(){function t(t,e,n){this.attributeName=e,this.delegate=n,this.elementObserver=new T(t,this)}Object.defineProperty(t.prototype,"element",{get:function(){return this.elementObserver.element},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"selector",{get:function(){return"["+this.attributeName+"]"},enumerable:!0,configurable:!0}),t.prototype.start=function(){this.elementObserver.start()},t.prototype.stop=function(){this.elementObserver.stop()},t.prototype.matchElement=function(t){return t.hasAttribute(this.attributeName)},t.prototype.matchElementsInTree=function(t){var e=this.matchElement(t)?[t]:[],n=Array.from(t.querySelectorAll(this.selector));return e.concat(n)},t.prototype.elementMatched=function(t){this.delegate.elementMatchedAttribute&&this.delegate.elementMatchedAttribute(t,this.attributeName)},t.prototype.elementUnmatched=function(t){this.delegate.elementUnmatchedAttribute&&this.delegate.elementUnmatchedAttribute(t,this.attributeName)},t.prototype.elementAttributeChanged=function(t,e){this.delegate.elementAttributeValueChanged&&this.attributeName==e&&this.delegate.elementAttributeValueChanged(t,e)}}(),function(){function t(t,e,n){this.attributeName=e,this.delegate=n,this.elementObserver=new T(t,this),this.tokensByElement=new P}return Object.defineProperty(t.prototype,"started",{get:function(){return this.elementObserver.started},enumerable:!0,configurable:!0}),t.prototype.start=function(){this.elementObserver.start()},t.prototype.stop=function(){this.elementObserver.stop()},t.prototype.refresh=function(){this.elementObserver.refresh()},Object.defineProperty(t.prototype,"element",{get:function(){return this.elementObserver.element},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"selector",{get:function(){return"["+this.attributeName+"]"},enumerable:!0,configurable:!0}),t.prototype.getElementsMatchingToken=function(t){return this.tokensByElement.getKeysForValue(t)},t.prototype.matchElement=function(t){return t.hasAttribute(this.attributeName)},t.prototype.matchElementsInTree=function(t){var e=this.matchElement(t)?[t]:[],n=Array.from(t.querySelectorAll(this.selector));return e.concat(n)},t.prototype.elementMatched=function(t){for(var e=Array.from(this.readTokenSetForElement(t)),n=0,r=e;n<r.length;n++){var o=r[n];this.elementMatchedToken(t,o)}},t.prototype.elementUnmatched=function(t){for(var e=this.getTokensForElement(t),n=0,r=e;n<r.length;n++){var o=r[n];this.elementUnmatchedToken(t,o)}},t.prototype.elementAttributeChanged=function(t){for(var e=this.readTokenSetForElement(t),n=0,r=Array.from(e);n<r.length;n++){var o=r[n];this.elementMatchedToken(t,o)}for(var i=0,c=this.getTokensForElement(t);i<c.length;i++){var o=c[i];e.has(o)||this.elementUnmatchedToken(t,o)}},t.prototype.elementMatchedToken=function(t,e){this.tokensByElement.has(t,e)||(this.tokensByElement.add(t,e),this.delegate.elementMatchedTokenForAttribute&&this.delegate.elementMatchedTokenForAttribute(t,e,this.attributeName))},t.prototype.elementUnmatchedToken=function(t,e){this.tokensByElement.has(t,e)&&(this.tokensByElement.delete(t,e),this.delegate.elementUnmatchedTokenForAttribute&&this.delegate.elementUnmatchedTokenForAttribute(t,e,this.attributeName))},t.prototype.getTokensForElement=function(t){return this.tokensByElement.getValuesForKey(t)},t.prototype.readTokenSetForElement=function(t){for(var e=new Set,n=t.getAttribute(this.attributeName)||"",r=0,o=n.split(/\s+/);r<o.length;r++){var i=o[r];i.length&&e.add(i)}return e},t}()),k=function(){function t(t,e){this.context=t,this.delegate=e,this.tokenListObserver=new F(this.element,this.attributeName,this),this.connectedActions=new j}return Object.defineProperty(t.prototype,"scope",{get:function(){return this.context.scope},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"schema",{get:function(){return this.context.schema},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"attributeName",{get:function(){return this.schema.actionAttribute},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"element",{get:function(){return this.scope.element},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"identifier",{get:function(){return this.scope.identifier},enumerable:!0,configurable:!0}),t.prototype.start=function(){this.tokenListObserver.start()},t.prototype.stop=function(){this.tokenListObserver.stop()},t.prototype.elementMatchedTokenForAttribute=function(t,e,n){if(this.scope.containsElement(t)){var r=this.buildActionForElementWithDescriptorString(t,e);r&&(this.connectedActions.add(t,r),this.delegate.inlineActionConnected(r))}},t.prototype.elementUnmatchedTokenForAttribute=function(t,e,n){var r=this.getConnectedActionForElementWithDescriptorString(t,e);r&&(this.connectedActions.delete(t,r),this.delegate.inlineActionDisconnected(r))},t.prototype.getConnectedActionForElementWithDescriptorString=function(t,e){var n=this.buildActionForElementWithDescriptorString(t,e);if(n){return this.connectedActions.getValuesForKey(t).find(function(t){return t.hasSameDescriptorAs(n)})}},t.prototype.buildActionForElementWithDescriptorString=function(t,e){try{var n=O.forElementWithInlineDescriptorString(t,e);if(n.identifier==this.identifier)return new E(this.context,n,n.eventTarget)}catch(n){this.context.handleError(n,'parsing descriptor string "'+e+'"',{element:t})}},t}(),x=function(){function t(t){this.scope=t}return Object.defineProperty(t.prototype,"element",{get:function(){return this.scope.element},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"identifier",{get:function(){return this.scope.identifier},enumerable:!0,configurable:!0}),t.prototype.get=function(t){return t=this.getFormattedKey(t),this.element.getAttribute(t)},t.prototype.set=function(t,e){return t=this.getFormattedKey(t),this.element.setAttribute(t,e),this.get(t)},t.prototype.has=function(t){return t=this.getFormattedKey(t),this.element.hasAttribute(t)},t.prototype.delete=function(t){return!!this.has(t)&&(t=this.getFormattedKey(t),this.element.removeAttribute(t),!0)},t.prototype.getFormattedKey=function(t){return"data-"+this.identifier+"-"+l(t)},t}(),B=function(){function t(t){this.scope=t}return Object.defineProperty(t.prototype,"element",{get:function(){return this.scope.element},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"identifier",{get:function(){return this.scope.identifier},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"schema",{get:function(){return this.scope.schema},enumerable:!0,configurable:!0}),t.prototype.has=function(t){return null!=this.find(t)},t.prototype.find=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];var n=this.getSelectorForTargetNames(t);return this.scope.findElement(n)},t.prototype.findAll=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];var n=this.getSelectorForTargetNames(t);return this.scope.findAllElements(n)},t.prototype.getSelectorForTargetNames=function(t){var e=this;return t.map(function(t){return e.getSelectorForTargetName(t)}).join(", ")},t.prototype.getSelectorForTargetName=function(t){var e=this.identifier+"."+t;return f(this.schema.targetAttribute,e)},t}(),M=function(){function t(t,e,n){this.schema=t,this.identifier=e,this.element=n,this.targets=new B(this),this.data=new x(this)}return t.prototype.findElement=function(t){return this.findAllElements(t)[0]},t.prototype.findAllElements=function(t){var e=this.element.matches(t)?[this.element]:[],n=this.filterElements(Array.from(this.element.querySelectorAll(t)));return e.concat(n)},t.prototype.filterElements=function(t){var e=this;return t.filter(function(t){return e.containsElement(t)})},t.prototype.containsElement=function(t){return t.closest(this.controllerSelector)===this.element},Object.defineProperty(t.prototype,"controllerSelector",{get:function(){return f(this.schema.controllerAttribute,this.identifier)},enumerable:!0,configurable:!0}),t}(),C=function(){function t(t,e){this.module=t,this.scope=new M(this.schema,this.identifier,e),this.actions=new N(this),this.inlineActionObserver=new k(this,this);try{this.controller=new t.controllerConstructor(this),this.controller.initialize()}catch(t){this.handleError(t,"initializing controller")}}return t.prototype.connect=function(){this.actions.start(),this.inlineActionObserver.start();try{this.controller.connect()}catch(t){this.handleError(t,"connecting controller")}},t.prototype.disconnect=function(){try{this.controller.disconnect()}catch(t){this.handleError(t,"disconnecting controller")}this.inlineActionObserver.stop(),this.actions.stop()},Object.defineProperty(t.prototype,"application",{get:function(){return this.module.application},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"identifier",{get:function(){return this.module.identifier},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"schema",{get:function(){return this.application.schema},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"element",{get:function(){return this.scope.element},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"parentElement",{get:function(){return this.element.parentElement},enumerable:!0,configurable:!0}),t.prototype.inlineActionConnected=function(t){this.actions.add(t)},t.prototype.inlineActionDisconnected=function(t){this.actions.delete(t)},t.prototype.handleError=function(t,e,n){void 0===n&&(n={});var r=this,o=r.identifier,i=r.controller,c=r.element;n=Object.assign({identifier:o,controller:i,element:c},n),this.application.handleError(t,"Error "+e,n)},t}(),S=this&&this.__extends||function(){var t=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var n in e)e.hasOwnProperty(n)&&(t[n]=e[n])};return function(e,n){function r(){this.constructor=e}t(e,n),e.prototype=null===n?Object.create(n):(r.prototype=n.prototype,new r)}}(),I=function(){function t(t){function e(){var n=this&&this instanceof e?this.constructor:void 0;return Reflect.construct(t,arguments,n)}return e.prototype=Object.create(t.prototype,{constructor:{value:e}}),Reflect.setPrototypeOf(e,t),e}try{return function(){var e=function(){this.a.call(this)},n=t(e);n.prototype.a=function(){},new n}(),t}catch(t){return function(t){return function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return S(e,t),e}(t)}}}(),_=function(){function t(t,e){this.application=t,this.definition=h(e),this.contextsByElement=new WeakMap,this.connectedContexts=new Set}return Object.defineProperty(t.prototype,"identifier",{get:function(){return this.definition.identifier},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"controllerConstructor",{get:function(){return this.definition.controllerConstructor},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"contexts",{get:function(){return Array.from(this.connectedContexts)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"size",{get:function(){return this.connectedContexts.size},enumerable:!0,configurable:!0}),t.prototype.connectElement=function(t){var e=this.fetchContextForElement(t);e&&!this.connectedContexts.has(e)&&(this.connectedContexts.add(e),e.connect())},t.prototype.disconnectElement=function(t){var e=this.fetchContextForElement(t);e&&this.connectedContexts.has(e)&&(this.connectedContexts.delete(e),e.disconnect())},t.prototype.getContextForElement=function(t){return this.contextsByElement.get(t)},t.prototype.fetchContextForElement=function(t){var e=this.contextsByElement.get(t);return e||(e=new C(this,t),this.contextsByElement.set(t,e)),e},t}(),K=function(){function t(t){this.application=t,this.tokenListObserver=new F(this.element,this.controllerAttribute,this),this.modulesByIdentifier=new Map}return Object.defineProperty(t.prototype,"schema",{get:function(){return this.application.schema},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"element",{get:function(){return this.application.element},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"controllerAttribute",{get:function(){return this.schema.controllerAttribute},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"modules",{get:function(){return Array.from(this.modulesByIdentifier.values())},enumerable:!0,configurable:!0}),t.prototype.start=function(){this.tokenListObserver.start()},t.prototype.stop=function(){this.tokenListObserver.stop()},t.prototype.loadDefinition=function(t){var e=t.identifier;this.unloadIdentifier(e);var n=new _(this.application,t);this.modulesByIdentifier.set(e,n),this.connectModule(n)},t.prototype.unloadIdentifier=function(t){var e=this.modulesByIdentifier.get(t);e&&(this.disconnectModule(e),this.modulesByIdentifier.delete(t))},t.prototype.elementMatchedTokenForAttribute=function(t,e,n){this.connectModuleForIdentifierToElement(e,t)},t.prototype.elementUnmatchedTokenForAttribute=function(t,e,n){this.disconnectModuleForIdentifierFromElement(e,t)},Object.defineProperty(t.prototype,"contexts",{get:function(){return this.modules.reduce(function(t,e){return t.concat(Array.from(e.contexts))},[])},enumerable:!0,configurable:!0}),t.prototype.getContextForElementAndIdentifier=function(t,e){var n=this.modulesByIdentifier.get(e);if(n)return n.getContextForElement(t)},t.prototype.connectModule=function(t){for(var e=this.tokenListObserver.getElementsMatchingToken(t.identifier),n=0,r=e;n<r.length;n++){var o=r[n];t.connectElement(o)}},t.prototype.disconnectModule=function(t){for(var e=t.contexts,n=0,r=e;n<r.length;n++){var o=r[n].element;t.disconnectElement(o)}},t.prototype.connectModuleForIdentifierToElement=function(t,e){var n=this.modulesByIdentifier.get(t);n&&n.connectElement(e)},t.prototype.disconnectModuleForIdentifierFromElement=function(t,e){var n=this.modulesByIdentifier.get(t);n&&n.disconnectElement(e)},t}(),D={controllerAttribute:"data-controller",actionAttribute:"data-action",targetAttribute:"data-target"},V=function(){function t(t,e){void 0===t&&(t=document.documentElement),void 0===e&&(e=D),this.element=t,this.schema=e,this.router=new K(this)}return t.start=function(e,n){var r=new t(e,n);return r.start(),r},t.prototype.start=function(){this.router.start()},t.prototype.stop=function(){this.router.stop()},t.prototype.register=function(t,e){this.load({identifier:t,controllerConstructor:e})},t.prototype.load=function(t){for(var e=this,n=[],r=1;r<arguments.length;r++)n[r-1]=arguments[r];(Array.isArray(t)?t:[t].concat(n)).forEach(function(t){return e.router.loadDefinition(t)})},t.prototype.unload=function(t){for(var e=this,n=[],r=1;r<arguments.length;r++)n[r-1]=arguments[r];(Array.isArray(t)?t:[t].concat(n)).forEach(function(t){return e.router.unloadIdentifier(t)})},Object.defineProperty(t.prototype,"controllers",{get:function(){return this.router.contexts.map(function(t){return t.controller})},enumerable:!0,configurable:!0}),t.prototype.getControllerForElementAndIdentifier=function(t,e){var n=this.router.getContextForElementAndIdentifier(t,e);return n?n.controller:null},t.prototype.handleError=function(t,e,n){console.error("%s\n\n%o\n\n%o",e,t,n)},t}(),L=function(){function t(t){this.context=t}return t.bless=function(){d(this)},Object.defineProperty(t.prototype,"application",{get:function(){return this.context.application},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"scope",{get:function(){return this.context.scope},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"element",{get:function(){return this.scope.element},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"identifier",{get:function(){return this.scope.identifier},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"targets",{get:function(){return this.scope.targets},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"data",{get:function(){return this.scope.data},enumerable:!0,configurable:!0}),t.prototype.initialize=function(){},t.prototype.connect=function(){},t.prototype.disconnect=function(){},t.targets=[],t}();n.d(e,"Action",function(){return E}),n.d(e,"ActionDescriptor",function(){return O}),n.d(e,"Application",function(){return V}),n.d(e,"Context",function(){return C}),n.d(e,"Controller",function(){return L}),n.d(e,"defaultSchema",function(){return D})}])});
+(function(global, factory) {
+  typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define([ "exports" ], factory) : factory(global.Stimulus = {});
+})(this, function(exports) {
+  "use strict";
+  var EventListener = function() {
+    function EventListener(eventTarget, eventName) {
+      this.eventTarget = eventTarget;
+      this.eventName = eventName;
+      this.unorderedBindings = new Set();
+    }
+    EventListener.prototype.connect = function() {
+      this.eventTarget.addEventListener(this.eventName, this, false);
+    };
+    EventListener.prototype.disconnect = function() {
+      this.eventTarget.removeEventListener(this.eventName, this, false);
+    };
+    EventListener.prototype.bindingConnected = function(binding) {
+      this.unorderedBindings.add(binding);
+    };
+    EventListener.prototype.bindingDisconnected = function(binding) {
+      this.unorderedBindings.delete(binding);
+    };
+    EventListener.prototype.handleEvent = function(event) {
+      var extendedEvent = extendEvent(event);
+      for (var _i = 0, _a = this.bindings; _i < _a.length; _i++) {
+        var binding = _a[_i];
+        if (extendedEvent.immediatePropagationStopped) {
+          break;
+        } else {
+          binding.handleEvent(extendedEvent);
+        }
+      }
+    };
+    Object.defineProperty(EventListener.prototype, "bindings", {
+      get: function() {
+        return Array.from(this.unorderedBindings).sort(function(left, right) {
+          var leftIndex = left.index, rightIndex = right.index;
+          return leftIndex < rightIndex ? -1 : leftIndex > rightIndex ? 1 : 0;
+        });
+      },
+      enumerable: true,
+      configurable: true
+    });
+    return EventListener;
+  }();
+  function extendEvent(event) {
+    if ("immediatePropagationStopped" in event) {
+      return event;
+    } else {
+      var stopImmediatePropagation_1 = event.stopImmediatePropagation;
+      return Object.assign(event, {
+        immediatePropagationStopped: false,
+        stopImmediatePropagation: function() {
+          this.immediatePropagationStopped = true;
+          stopImmediatePropagation_1.call(this);
+        }
+      });
+    }
+  }
+  var Dispatcher = function() {
+    function Dispatcher(application) {
+      this.application = application;
+      this.eventListenerMaps = new Map();
+      this.started = false;
+    }
+    Dispatcher.prototype.start = function() {
+      if (!this.started) {
+        this.started = true;
+        this.eventListeners.forEach(function(eventListener) {
+          return eventListener.connect();
+        });
+      }
+    };
+    Dispatcher.prototype.stop = function() {
+      if (this.started) {
+        this.started = false;
+        this.eventListeners.forEach(function(eventListener) {
+          return eventListener.disconnect();
+        });
+      }
+    };
+    Object.defineProperty(Dispatcher.prototype, "eventListeners", {
+      get: function() {
+        return Array.from(this.eventListenerMaps.values()).reduce(function(listeners, map) {
+          return listeners.concat(Array.from(map.values()));
+        }, []);
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Dispatcher.prototype.bindingConnected = function(binding) {
+      this.fetchEventListenerForBinding(binding).bindingConnected(binding);
+    };
+    Dispatcher.prototype.bindingDisconnected = function(binding) {
+      this.fetchEventListenerForBinding(binding).bindingDisconnected(binding);
+    };
+    Dispatcher.prototype.handleError = function(error, message, detail) {
+      if (detail === void 0) {
+        detail = {};
+      }
+      this.application.handleError(error, "Error " + message, detail);
+    };
+    Dispatcher.prototype.fetchEventListenerForBinding = function(binding) {
+      var eventTarget = binding.eventTarget, eventName = binding.eventName;
+      return this.fetchEventListener(eventTarget, eventName);
+    };
+    Dispatcher.prototype.fetchEventListener = function(eventTarget, eventName) {
+      var eventListenerMap = this.fetchEventListenerMapForEventTarget(eventTarget);
+      var eventListener = eventListenerMap.get(eventName);
+      if (!eventListener) {
+        eventListener = this.createEventListener(eventTarget, eventName);
+        eventListenerMap.set(eventName, eventListener);
+      }
+      return eventListener;
+    };
+    Dispatcher.prototype.createEventListener = function(eventTarget, eventName) {
+      var eventListener = new EventListener(eventTarget, eventName);
+      if (this.started) {
+        eventListener.connect();
+      }
+      return eventListener;
+    };
+    Dispatcher.prototype.fetchEventListenerMapForEventTarget = function(eventTarget) {
+      var eventListenerMap = this.eventListenerMaps.get(eventTarget);
+      if (!eventListenerMap) {
+        eventListenerMap = new Map();
+        this.eventListenerMaps.set(eventTarget, eventListenerMap);
+      }
+      return eventListenerMap;
+    };
+    return Dispatcher;
+  }();
+  var descriptorPattern = /^((.+?)(@(window|document))?->)?(.+?)(#(.+))?$/;
+  function parseDescriptorString(descriptorString) {
+    var source = descriptorString.trim();
+    var matches = source.match(descriptorPattern) || [];
+    return {
+      eventTarget: parseEventTarget(matches[4]),
+      eventName: matches[2],
+      identifier: matches[5],
+      methodName: matches[7]
+    };
+  }
+  function parseEventTarget(eventTargetName) {
+    if (eventTargetName == "window") {
+      return window;
+    } else if (eventTargetName == "document") {
+      return document;
+    }
+  }
+  function stringifyEventTarget(eventTarget) {
+    if (eventTarget == window) {
+      return "window";
+    } else if (eventTarget == document) {
+      return "document";
+    }
+  }
+  var Action = function() {
+    function Action(element, index, descriptor) {
+      this.element = element;
+      this.index = index;
+      this.eventTarget = descriptor.eventTarget || element;
+      this.eventName = descriptor.eventName || getDefaultEventNameForElement(element) || error("missing event name");
+      this.identifier = descriptor.identifier || error("missing identifier");
+      this.methodName = descriptor.methodName || error("missing method name");
+    }
+    Action.forToken = function(token) {
+      return new this(token.element, token.index, parseDescriptorString(token.content));
+    };
+    Action.prototype.toString = function() {
+      var eventNameSuffix = this.eventTargetName ? "@" + this.eventTargetName : "";
+      return "" + this.eventName + eventNameSuffix + "->" + this.identifier + "#" + this.methodName;
+    };
+    Object.defineProperty(Action.prototype, "eventTargetName", {
+      get: function() {
+        return stringifyEventTarget(this.eventTarget);
+      },
+      enumerable: true,
+      configurable: true
+    });
+    return Action;
+  }();
+  var defaultEventNames = {
+    a: function(e) {
+      return "click";
+    },
+    button: function(e) {
+      return "click";
+    },
+    form: function(e) {
+      return "submit";
+    },
+    input: function(e) {
+      return e.getAttribute("type") == "submit" ? "click" : "change";
+    },
+    select: function(e) {
+      return "change";
+    },
+    textarea: function(e) {
+      return "change";
+    }
+  };
+  function getDefaultEventNameForElement(element) {
+    var tagName = element.tagName.toLowerCase();
+    if (tagName in defaultEventNames) {
+      return defaultEventNames[tagName](element);
+    }
+  }
+  function error(message) {
+    throw new Error(message);
+  }
+  var Binding = function() {
+    function Binding(context, action) {
+      this.context = context;
+      this.action = action;
+    }
+    Object.defineProperty(Binding.prototype, "index", {
+      get: function() {
+        return this.action.index;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Binding.prototype, "eventTarget", {
+      get: function() {
+        return this.action.eventTarget;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Binding.prototype, "identifier", {
+      get: function() {
+        return this.context.identifier;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Binding.prototype.handleEvent = function(event) {
+      if (this.willBeInvokedByEvent(event)) {
+        this.invokeWithEvent(event);
+      }
+    };
+    Object.defineProperty(Binding.prototype, "eventName", {
+      get: function() {
+        return this.action.eventName;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Binding.prototype, "method", {
+      get: function() {
+        var method = this.controller[this.methodName];
+        if (typeof method == "function") {
+          return method;
+        }
+        throw new Error('Action "' + this.action + '" references undefined method "' + this.methodName + '"');
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Binding.prototype.invokeWithEvent = function(event) {
+      try {
+        this.method.call(this.controller, event);
+      } catch (error) {
+        var _a = this, identifier = _a.identifier, controller = _a.controller, element = _a.element, index = _a.index;
+        var detail = {
+          identifier: identifier,
+          controller: controller,
+          element: element,
+          index: index,
+          event: event
+        };
+        this.context.handleError(error, 'invoking action "' + this.action + '"', detail);
+      }
+    };
+    Binding.prototype.willBeInvokedByEvent = function(event) {
+      var eventTarget = event.target;
+      if (this.element === eventTarget) {
+        return true;
+      } else if (eventTarget instanceof Element && this.element.contains(eventTarget)) {
+        return this.scope.containsElement(eventTarget);
+      } else {
+        return true;
+      }
+    };
+    Object.defineProperty(Binding.prototype, "controller", {
+      get: function() {
+        return this.context.controller;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Binding.prototype, "methodName", {
+      get: function() {
+        return this.action.methodName;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Binding.prototype, "element", {
+      get: function() {
+        return this.scope.element;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Binding.prototype, "scope", {
+      get: function() {
+        return this.context.scope;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    return Binding;
+  }();
+  var ElementObserver = function() {
+    function ElementObserver(element, delegate) {
+      var _this = this;
+      this.element = element;
+      this.started = false;
+      this.delegate = delegate;
+      this.elements = new Set();
+      this.mutationObserver = new MutationObserver(function(mutations) {
+        return _this.processMutations(mutations);
+      });
+    }
+    ElementObserver.prototype.start = function() {
+      if (!this.started) {
+        this.started = true;
+        this.mutationObserver.observe(this.element, {
+          attributes: true,
+          childList: true,
+          subtree: true
+        });
+        this.refresh();
+      }
+    };
+    ElementObserver.prototype.stop = function() {
+      if (this.started) {
+        this.mutationObserver.takeRecords();
+        this.mutationObserver.disconnect();
+        this.started = false;
+      }
+    };
+    ElementObserver.prototype.refresh = function() {
+      if (this.started) {
+        var matches = new Set(this.matchElementsInTree());
+        for (var _i = 0, _a = Array.from(this.elements); _i < _a.length; _i++) {
+          var element = _a[_i];
+          if (!matches.has(element)) {
+            this.removeElement(element);
+          }
+        }
+        for (var _b = 0, _c = Array.from(matches); _b < _c.length; _b++) {
+          var element = _c[_b];
+          this.addElement(element);
+        }
+      }
+    };
+    ElementObserver.prototype.processMutations = function(mutations) {
+      if (this.started) {
+        for (var _i = 0, mutations_1 = mutations; _i < mutations_1.length; _i++) {
+          var mutation = mutations_1[_i];
+          this.processMutation(mutation);
+        }
+      }
+    };
+    ElementObserver.prototype.processMutation = function(mutation) {
+      if (mutation.type == "attributes") {
+        this.processAttributeChange(mutation.target, mutation.attributeName);
+      } else if (mutation.type == "childList") {
+        this.processRemovedNodes(mutation.removedNodes);
+        this.processAddedNodes(mutation.addedNodes);
+      }
+    };
+    ElementObserver.prototype.processAttributeChange = function(node, attributeName) {
+      var element = node;
+      if (this.elements.has(element)) {
+        if (this.delegate.elementAttributeChanged && this.matchElement(element)) {
+          this.delegate.elementAttributeChanged(element, attributeName);
+        } else {
+          this.removeElement(element);
+        }
+      } else if (this.matchElement(element)) {
+        this.addElement(element);
+      }
+    };
+    ElementObserver.prototype.processRemovedNodes = function(nodes) {
+      for (var _i = 0, _a = Array.from(nodes); _i < _a.length; _i++) {
+        var node = _a[_i];
+        var element = this.elementFromNode(node);
+        if (element) {
+          this.processTree(element, this.removeElement);
+        }
+      }
+    };
+    ElementObserver.prototype.processAddedNodes = function(nodes) {
+      for (var _i = 0, _a = Array.from(nodes); _i < _a.length; _i++) {
+        var node = _a[_i];
+        var element = this.elementFromNode(node);
+        if (element && this.elementIsActive(element)) {
+          this.processTree(element, this.addElement);
+        }
+      }
+    };
+    ElementObserver.prototype.matchElement = function(element) {
+      return this.delegate.matchElement(element);
+    };
+    ElementObserver.prototype.matchElementsInTree = function(tree) {
+      if (tree === void 0) {
+        tree = this.element;
+      }
+      return this.delegate.matchElementsInTree(tree);
+    };
+    ElementObserver.prototype.processTree = function(tree, processor) {
+      for (var _i = 0, _a = this.matchElementsInTree(tree); _i < _a.length; _i++) {
+        var element = _a[_i];
+        processor.call(this, element);
+      }
+    };
+    ElementObserver.prototype.elementFromNode = function(node) {
+      if (node.nodeType == Node.ELEMENT_NODE) {
+        return node;
+      }
+    };
+    ElementObserver.prototype.elementIsActive = function(element) {
+      if (element.isConnected != this.element.isConnected) {
+        return false;
+      } else {
+        return this.element.contains(element);
+      }
+    };
+    ElementObserver.prototype.addElement = function(element) {
+      if (!this.elements.has(element)) {
+        if (this.elementIsActive(element)) {
+          this.elements.add(element);
+          if (this.delegate.elementMatched) {
+            this.delegate.elementMatched(element);
+          }
+        }
+      }
+    };
+    ElementObserver.prototype.removeElement = function(element) {
+      if (this.elements.has(element)) {
+        this.elements.delete(element);
+        if (this.delegate.elementUnmatched) {
+          this.delegate.elementUnmatched(element);
+        }
+      }
+    };
+    return ElementObserver;
+  }();
+  var AttributeObserver = function() {
+    function AttributeObserver(element, attributeName, delegate) {
+      this.attributeName = attributeName;
+      this.delegate = delegate;
+      this.elementObserver = new ElementObserver(element, this);
+    }
+    Object.defineProperty(AttributeObserver.prototype, "element", {
+      get: function() {
+        return this.elementObserver.element;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(AttributeObserver.prototype, "selector", {
+      get: function() {
+        return "[" + this.attributeName + "]";
+      },
+      enumerable: true,
+      configurable: true
+    });
+    AttributeObserver.prototype.start = function() {
+      this.elementObserver.start();
+    };
+    AttributeObserver.prototype.stop = function() {
+      this.elementObserver.stop();
+    };
+    AttributeObserver.prototype.refresh = function() {
+      this.elementObserver.refresh();
+    };
+    Object.defineProperty(AttributeObserver.prototype, "started", {
+      get: function() {
+        return this.elementObserver.started;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    AttributeObserver.prototype.matchElement = function(element) {
+      return element.hasAttribute(this.attributeName);
+    };
+    AttributeObserver.prototype.matchElementsInTree = function(tree) {
+      var match = this.matchElement(tree) ? [ tree ] : [];
+      var matches = Array.from(tree.querySelectorAll(this.selector));
+      return match.concat(matches);
+    };
+    AttributeObserver.prototype.elementMatched = function(element) {
+      if (this.delegate.elementMatchedAttribute) {
+        this.delegate.elementMatchedAttribute(element, this.attributeName);
+      }
+    };
+    AttributeObserver.prototype.elementUnmatched = function(element) {
+      if (this.delegate.elementUnmatchedAttribute) {
+        this.delegate.elementUnmatchedAttribute(element, this.attributeName);
+      }
+    };
+    AttributeObserver.prototype.elementAttributeChanged = function(element, attributeName) {
+      if (this.delegate.elementAttributeValueChanged && this.attributeName == attributeName) {
+        this.delegate.elementAttributeValueChanged(element, attributeName);
+      }
+    };
+    return AttributeObserver;
+  }();
+  function add(map, key, value) {
+    fetch(map, key).add(value);
+  }
+  function del(map, key, value) {
+    fetch(map, key).delete(value);
+    prune(map, key);
+  }
+  function fetch(map, key) {
+    var values = map.get(key);
+    if (!values) {
+      values = new Set();
+      map.set(key, values);
+    }
+    return values;
+  }
+  function prune(map, key) {
+    var values = map.get(key);
+    if (values != null && values.size == 0) {
+      map.delete(key);
+    }
+  }
+  var Multimap = function() {
+    function Multimap() {
+      this.valuesByKey = new Map();
+    }
+    Object.defineProperty(Multimap.prototype, "values", {
+      get: function() {
+        var sets = Array.from(this.valuesByKey.values());
+        return sets.reduce(function(values, set) {
+          return values.concat(Array.from(set));
+        }, []);
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Multimap.prototype, "size", {
+      get: function() {
+        var sets = Array.from(this.valuesByKey.values());
+        return sets.reduce(function(size, set) {
+          return size + set.size;
+        }, 0);
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Multimap.prototype.add = function(key, value) {
+      add(this.valuesByKey, key, value);
+    };
+    Multimap.prototype.delete = function(key, value) {
+      del(this.valuesByKey, key, value);
+    };
+    Multimap.prototype.has = function(key, value) {
+      var values = this.valuesByKey.get(key);
+      return values != null && values.has(value);
+    };
+    Multimap.prototype.hasKey = function(key) {
+      return this.valuesByKey.has(key);
+    };
+    Multimap.prototype.hasValue = function(value) {
+      var sets = Array.from(this.valuesByKey.values());
+      return sets.some(function(set) {
+        return set.has(value);
+      });
+    };
+    Multimap.prototype.getValuesForKey = function(key) {
+      var values = this.valuesByKey.get(key);
+      return values ? Array.from(values) : [];
+    };
+    Multimap.prototype.getKeysForValue = function(value) {
+      return Array.from(this.valuesByKey).filter(function(_a) {
+        var key = _a[0], values = _a[1];
+        return values.has(value);
+      }).map(function(_a) {
+        var key = _a[0], values = _a[1];
+        return key;
+      });
+    };
+    return Multimap;
+  }();
+  var __extends = undefined && undefined.__extends || function() {
+    var extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function(d, b) {
+      d.__proto__ = b;
+    } || function(d, b) {
+      for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    };
+    return function(d, b) {
+      extendStatics(d, b);
+      function __() {
+        this.constructor = d;
+      }
+      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+  }();
+  var IndexedMultimap = function(_super) {
+    __extends(IndexedMultimap, _super);
+    function IndexedMultimap() {
+      var _this = _super.call(this) || this;
+      _this.keysByValue = new Map();
+      return _this;
+    }
+    Object.defineProperty(IndexedMultimap.prototype, "values", {
+      get: function() {
+        return Array.from(this.keysByValue.keys());
+      },
+      enumerable: true,
+      configurable: true
+    });
+    IndexedMultimap.prototype.add = function(key, value) {
+      _super.prototype.add.call(this, key, value);
+      add(this.keysByValue, value, key);
+    };
+    IndexedMultimap.prototype.delete = function(key, value) {
+      _super.prototype.delete.call(this, key, value);
+      del(this.keysByValue, value, key);
+    };
+    IndexedMultimap.prototype.hasValue = function(value) {
+      return this.keysByValue.has(value);
+    };
+    IndexedMultimap.prototype.getKeysForValue = function(value) {
+      var set = this.keysByValue.get(value);
+      return set ? Array.from(set) : [];
+    };
+    return IndexedMultimap;
+  }(Multimap);
+  var TokenListObserver = function() {
+    function TokenListObserver(element, attributeName, delegate) {
+      this.attributeObserver = new AttributeObserver(element, attributeName, this);
+      this.delegate = delegate;
+      this.tokensByElement = new Multimap();
+    }
+    Object.defineProperty(TokenListObserver.prototype, "started", {
+      get: function() {
+        return this.attributeObserver.started;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    TokenListObserver.prototype.start = function() {
+      this.attributeObserver.start();
+    };
+    TokenListObserver.prototype.stop = function() {
+      this.attributeObserver.stop();
+    };
+    TokenListObserver.prototype.refresh = function() {
+      this.attributeObserver.refresh();
+    };
+    Object.defineProperty(TokenListObserver.prototype, "element", {
+      get: function() {
+        return this.attributeObserver.element;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(TokenListObserver.prototype, "attributeName", {
+      get: function() {
+        return this.attributeObserver.attributeName;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    TokenListObserver.prototype.elementMatchedAttribute = function(element) {
+      this.tokensMatched(this.readTokensForElement(element));
+    };
+    TokenListObserver.prototype.elementAttributeValueChanged = function(element) {
+      var _a = this.refreshTokensForElement(element), unmatchedTokens = _a[0], matchedTokens = _a[1];
+      this.tokensUnmatched(unmatchedTokens);
+      this.tokensMatched(matchedTokens);
+    };
+    TokenListObserver.prototype.elementUnmatchedAttribute = function(element) {
+      this.tokensUnmatched(this.tokensByElement.getValuesForKey(element));
+    };
+    TokenListObserver.prototype.tokensMatched = function(tokens) {
+      var _this = this;
+      tokens.forEach(function(token) {
+        return _this.tokenMatched(token);
+      });
+    };
+    TokenListObserver.prototype.tokensUnmatched = function(tokens) {
+      var _this = this;
+      tokens.forEach(function(token) {
+        return _this.tokenUnmatched(token);
+      });
+    };
+    TokenListObserver.prototype.tokenMatched = function(token) {
+      this.delegate.tokenMatched(token);
+      this.tokensByElement.add(token.element, token);
+    };
+    TokenListObserver.prototype.tokenUnmatched = function(token) {
+      this.delegate.tokenUnmatched(token);
+      this.tokensByElement.delete(token.element, token);
+    };
+    TokenListObserver.prototype.refreshTokensForElement = function(element) {
+      var previousTokens = this.tokensByElement.getValuesForKey(element);
+      var currentTokens = this.readTokensForElement(element);
+      var firstDifferingIndex = zip(previousTokens, currentTokens).findIndex(function(_a) {
+        var previousToken = _a[0], currentToken = _a[1];
+        return !tokensAreEqual(previousToken, currentToken);
+      });
+      if (firstDifferingIndex == -1) {
+        return [ [], [] ];
+      } else {
+        return [ previousTokens.slice(firstDifferingIndex), currentTokens.slice(firstDifferingIndex) ];
+      }
+    };
+    TokenListObserver.prototype.readTokensForElement = function(element) {
+      var attributeName = this.attributeName;
+      var tokenString = element.getAttribute(attributeName) || "";
+      return parseTokenString(tokenString, element, attributeName);
+    };
+    return TokenListObserver;
+  }();
+  function parseTokenString(tokenString, element, attributeName) {
+    return tokenString.trim().split(/\s+/).filter(function(content) {
+      return content.length;
+    }).map(function(content, index) {
+      return {
+        element: element,
+        attributeName: attributeName,
+        content: content,
+        index: index
+      };
+    });
+  }
+  function zip(left, right) {
+    var length = Math.max(left.length, right.length);
+    return Array.from({
+      length: length
+    }, function(_, index) {
+      return [ left[index], right[index] ];
+    });
+  }
+  function tokensAreEqual(left, right) {
+    return left && right && left.index == right.index && left.content == right.content;
+  }
+  var ValueListObserver = function() {
+    function ValueListObserver(element, attributeName, delegate) {
+      this.tokenListObserver = new TokenListObserver(element, attributeName, this);
+      this.delegate = delegate;
+      this.parseResultsByToken = new WeakMap();
+      this.valuesByTokenByElement = new WeakMap();
+    }
+    Object.defineProperty(ValueListObserver.prototype, "started", {
+      get: function() {
+        return this.tokenListObserver.started;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    ValueListObserver.prototype.start = function() {
+      this.tokenListObserver.start();
+    };
+    ValueListObserver.prototype.stop = function() {
+      this.tokenListObserver.stop();
+    };
+    ValueListObserver.prototype.refresh = function() {
+      this.tokenListObserver.refresh();
+    };
+    Object.defineProperty(ValueListObserver.prototype, "element", {
+      get: function() {
+        return this.tokenListObserver.element;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(ValueListObserver.prototype, "attributeName", {
+      get: function() {
+        return this.tokenListObserver.attributeName;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    ValueListObserver.prototype.tokenMatched = function(token) {
+      var element = token.element;
+      var value = this.fetchParseResultForToken(token).value;
+      if (value) {
+        this.fetchValuesByTokenForElement(element).set(token, value);
+        this.delegate.elementMatchedValue(element, value);
+      }
+    };
+    ValueListObserver.prototype.tokenUnmatched = function(token) {
+      var element = token.element;
+      var value = this.fetchParseResultForToken(token).value;
+      if (value) {
+        this.fetchValuesByTokenForElement(element).delete(token);
+        this.delegate.elementUnmatchedValue(element, value);
+      }
+    };
+    ValueListObserver.prototype.fetchParseResultForToken = function(token) {
+      var parseResult = this.parseResultsByToken.get(token);
+      if (!parseResult) {
+        parseResult = this.parseToken(token);
+        this.parseResultsByToken.set(token, parseResult);
+      }
+      return parseResult;
+    };
+    ValueListObserver.prototype.fetchValuesByTokenForElement = function(element) {
+      var valuesByToken = this.valuesByTokenByElement.get(element);
+      if (!valuesByToken) {
+        valuesByToken = new Map();
+        this.valuesByTokenByElement.set(element, valuesByToken);
+      }
+      return valuesByToken;
+    };
+    ValueListObserver.prototype.parseToken = function(token) {
+      try {
+        var value = this.delegate.parseValueForToken(token);
+        return {
+          value: value
+        };
+      } catch (error) {
+        return {
+          error: error
+        };
+      }
+    };
+    return ValueListObserver;
+  }();
+  var BindingObserver = function() {
+    function BindingObserver(context, delegate) {
+      this.context = context;
+      this.delegate = delegate;
+      this.bindingsByAction = new Map();
+    }
+    BindingObserver.prototype.start = function() {
+      if (!this.valueListObserver) {
+        this.valueListObserver = new ValueListObserver(this.element, this.actionAttribute, this);
+        this.valueListObserver.start();
+      }
+    };
+    BindingObserver.prototype.stop = function() {
+      if (this.valueListObserver) {
+        this.valueListObserver.stop();
+        delete this.valueListObserver;
+        this.disconnectAllActions();
+      }
+    };
+    Object.defineProperty(BindingObserver.prototype, "element", {
+      get: function() {
+        return this.context.element;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(BindingObserver.prototype, "identifier", {
+      get: function() {
+        return this.context.identifier;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(BindingObserver.prototype, "actionAttribute", {
+      get: function() {
+        return this.schema.actionAttribute;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(BindingObserver.prototype, "schema", {
+      get: function() {
+        return this.context.schema;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(BindingObserver.prototype, "bindings", {
+      get: function() {
+        return Array.from(this.bindingsByAction.values());
+      },
+      enumerable: true,
+      configurable: true
+    });
+    BindingObserver.prototype.connectAction = function(action) {
+      var binding = new Binding(this.context, action);
+      this.bindingsByAction.set(action, binding);
+      this.delegate.bindingConnected(binding);
+    };
+    BindingObserver.prototype.disconnectAction = function(action) {
+      var binding = this.bindingsByAction.get(action);
+      if (binding) {
+        this.bindingsByAction.delete(action);
+        this.delegate.bindingDisconnected(binding);
+      }
+    };
+    BindingObserver.prototype.disconnectAllActions = function() {
+      var _this = this;
+      this.bindings.forEach(function(binding) {
+        return _this.delegate.bindingDisconnected(binding);
+      });
+      this.bindingsByAction.clear();
+    };
+    BindingObserver.prototype.parseValueForToken = function(token) {
+      var action = Action.forToken(token);
+      if (action.identifier == this.identifier) {
+        return action;
+      }
+    };
+    BindingObserver.prototype.elementMatchedValue = function(element, action) {
+      this.connectAction(action);
+    };
+    BindingObserver.prototype.elementUnmatchedValue = function(element, action) {
+      this.disconnectAction(action);
+    };
+    return BindingObserver;
+  }();
+  var Context = function() {
+    function Context(module, scope) {
+      this.module = module;
+      this.scope = scope;
+      this.controller = new module.controllerConstructor(this);
+      this.bindingObserver = new BindingObserver(this, this.dispatcher);
+      try {
+        this.controller.initialize();
+      } catch (error) {
+        this.handleError(error, "initializing controller");
+      }
+    }
+    Context.prototype.connect = function() {
+      this.bindingObserver.start();
+      try {
+        this.controller.connect();
+      } catch (error) {
+        this.handleError(error, "connecting controller");
+      }
+    };
+    Context.prototype.disconnect = function() {
+      try {
+        this.controller.disconnect();
+      } catch (error) {
+        this.handleError(error, "disconnecting controller");
+      }
+      this.bindingObserver.stop();
+    };
+    Object.defineProperty(Context.prototype, "application", {
+      get: function() {
+        return this.module.application;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Context.prototype, "identifier", {
+      get: function() {
+        return this.module.identifier;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Context.prototype, "schema", {
+      get: function() {
+        return this.application.schema;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Context.prototype, "dispatcher", {
+      get: function() {
+        return this.application.dispatcher;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Context.prototype, "element", {
+      get: function() {
+        return this.scope.element;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Context.prototype, "parentElement", {
+      get: function() {
+        return this.element.parentElement;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Context.prototype.handleError = function(error, message, detail) {
+      if (detail === void 0) {
+        detail = {};
+      }
+      var _a = this, identifier = _a.identifier, controller = _a.controller, element = _a.element;
+      detail = Object.assign({
+        identifier: identifier,
+        controller: controller,
+        element: element
+      }, detail);
+      this.application.handleError(error, "Error " + message, detail);
+    };
+    return Context;
+  }();
+  var __extends$1 = undefined && undefined.__extends || function() {
+    var extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function(d, b) {
+      d.__proto__ = b;
+    } || function(d, b) {
+      for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    };
+    return function(d, b) {
+      extendStatics(d, b);
+      function __() {
+        this.constructor = d;
+      }
+      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+  }();
+  function blessDefinition(definition) {
+    return {
+      identifier: definition.identifier,
+      controllerConstructor: blessControllerConstructor(definition.controllerConstructor)
+    };
+  }
+  function blessControllerConstructor(controllerConstructor) {
+    var constructor = extend(controllerConstructor);
+    constructor.bless();
+    return constructor;
+  }
+  var extend = function() {
+    function extendWithReflect(constructor) {
+      function Controller() {
+        var _newTarget = this && this instanceof Controller ? this.constructor : void 0;
+        return Reflect.construct(constructor, arguments, _newTarget);
+      }
+      Controller.prototype = Object.create(constructor.prototype, {
+        constructor: {
+          value: Controller
+        }
+      });
+      Reflect.setPrototypeOf(Controller, constructor);
+      return Controller;
+    }
+    function testReflectExtension() {
+      var a = function() {
+        this.a.call(this);
+      };
+      var b = extendWithReflect(a);
+      b.prototype.a = function() {};
+      return new b();
+    }
+    try {
+      testReflectExtension();
+      return extendWithReflect;
+    } catch (error) {
+      return function(constructor) {
+        return function(_super) {
+          __extends$1(Controller, _super);
+          function Controller() {
+            return _super !== null && _super.apply(this, arguments) || this;
+          }
+          return Controller;
+        }(constructor);
+      };
+    }
+  }();
+  var Module = function() {
+    function Module(application, definition) {
+      this.application = application;
+      this.definition = blessDefinition(definition);
+      this.contextsByScope = new WeakMap();
+      this.connectedContexts = new Set();
+    }
+    Object.defineProperty(Module.prototype, "identifier", {
+      get: function() {
+        return this.definition.identifier;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Module.prototype, "controllerConstructor", {
+      get: function() {
+        return this.definition.controllerConstructor;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Module.prototype, "contexts", {
+      get: function() {
+        return Array.from(this.connectedContexts);
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Module.prototype.connectContextForScope = function(scope) {
+      var context = this.fetchContextForScope(scope);
+      this.connectedContexts.add(context);
+      context.connect();
+    };
+    Module.prototype.disconnectContextForScope = function(scope) {
+      var context = this.contextsByScope.get(scope);
+      if (context) {
+        this.connectedContexts.delete(context);
+        context.disconnect();
+      }
+    };
+    Module.prototype.fetchContextForScope = function(scope) {
+      var context = this.contextsByScope.get(scope);
+      if (!context) {
+        context = new Context(this, scope);
+        this.contextsByScope.set(scope, context);
+      }
+      return context;
+    };
+    return Module;
+  }();
+  var DataMap = function() {
+    function DataMap(scope) {
+      this.scope = scope;
+    }
+    Object.defineProperty(DataMap.prototype, "element", {
+      get: function() {
+        return this.scope.element;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(DataMap.prototype, "identifier", {
+      get: function() {
+        return this.scope.identifier;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    DataMap.prototype.get = function(key) {
+      key = this.getFormattedKey(key);
+      return this.element.getAttribute(key);
+    };
+    DataMap.prototype.set = function(key, value) {
+      key = this.getFormattedKey(key);
+      this.element.setAttribute(key, value);
+      return this.get(key);
+    };
+    DataMap.prototype.has = function(key) {
+      key = this.getFormattedKey(key);
+      return this.element.hasAttribute(key);
+    };
+    DataMap.prototype.delete = function(key) {
+      if (this.has(key)) {
+        key = this.getFormattedKey(key);
+        this.element.removeAttribute(key);
+        return true;
+      } else {
+        return false;
+      }
+    };
+    DataMap.prototype.getFormattedKey = function(key) {
+      return "data-" + this.identifier + "-" + dasherize(key);
+    };
+    return DataMap;
+  }();
+  function dasherize(value) {
+    return value.replace(/([A-Z])/g, function(_, char) {
+      return "-" + char.toLowerCase();
+    });
+  }
+  function attributeValueContainsToken(attributeName, token) {
+    return "[" + attributeName + '~="' + token + '"]';
+  }
+  var TargetSet = function() {
+    function TargetSet(scope) {
+      this.scope = scope;
+    }
+    Object.defineProperty(TargetSet.prototype, "element", {
+      get: function() {
+        return this.scope.element;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(TargetSet.prototype, "identifier", {
+      get: function() {
+        return this.scope.identifier;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(TargetSet.prototype, "schema", {
+      get: function() {
+        return this.scope.schema;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    TargetSet.prototype.has = function(targetName) {
+      return this.find(targetName) != null;
+    };
+    TargetSet.prototype.find = function() {
+      var targetNames = [];
+      for (var _i = 0; _i < arguments.length; _i++) {
+        targetNames[_i] = arguments[_i];
+      }
+      var selector = this.getSelectorForTargetNames(targetNames);
+      return this.scope.findElement(selector);
+    };
+    TargetSet.prototype.findAll = function() {
+      var targetNames = [];
+      for (var _i = 0; _i < arguments.length; _i++) {
+        targetNames[_i] = arguments[_i];
+      }
+      var selector = this.getSelectorForTargetNames(targetNames);
+      return this.scope.findAllElements(selector);
+    };
+    TargetSet.prototype.getSelectorForTargetNames = function(targetNames) {
+      var _this = this;
+      return targetNames.map(function(targetName) {
+        return _this.getSelectorForTargetName(targetName);
+      }).join(", ");
+    };
+    TargetSet.prototype.getSelectorForTargetName = function(targetName) {
+      var targetDescriptor = this.identifier + "." + targetName;
+      return attributeValueContainsToken(this.schema.targetAttribute, targetDescriptor);
+    };
+    return TargetSet;
+  }();
+  var Scope = function() {
+    function Scope(schema, identifier, element) {
+      this.schema = schema;
+      this.identifier = identifier;
+      this.element = element;
+      this.targets = new TargetSet(this);
+      this.data = new DataMap(this);
+    }
+    Scope.prototype.findElement = function(selector) {
+      return this.findAllElements(selector)[0];
+    };
+    Scope.prototype.findAllElements = function(selector) {
+      var head = this.element.matches(selector) ? [ this.element ] : [];
+      var tail = this.filterElements(Array.from(this.element.querySelectorAll(selector)));
+      return head.concat(tail);
+    };
+    Scope.prototype.filterElements = function(elements) {
+      var _this = this;
+      return elements.filter(function(element) {
+        return _this.containsElement(element);
+      });
+    };
+    Scope.prototype.containsElement = function(element) {
+      return element.closest(this.controllerSelector) === this.element;
+    };
+    Object.defineProperty(Scope.prototype, "controllerSelector", {
+      get: function() {
+        return attributeValueContainsToken(this.schema.controllerAttribute, this.identifier);
+      },
+      enumerable: true,
+      configurable: true
+    });
+    return Scope;
+  }();
+  var ScopeObserver = function() {
+    function ScopeObserver(element, schema, delegate) {
+      this.element = element;
+      this.schema = schema;
+      this.delegate = delegate;
+      this.valueListObserver = new ValueListObserver(this.element, this.controllerAttribute, this);
+      this.scopesByIdentifierByElement = new WeakMap();
+      this.scopeReferenceCounts = new WeakMap();
+    }
+    ScopeObserver.prototype.start = function() {
+      this.valueListObserver.start();
+    };
+    ScopeObserver.prototype.stop = function() {
+      this.valueListObserver.stop();
+    };
+    Object.defineProperty(ScopeObserver.prototype, "controllerAttribute", {
+      get: function() {
+        return this.schema.controllerAttribute;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    ScopeObserver.prototype.parseValueForToken = function(token) {
+      var element = token.element, identifier = token.content;
+      var scopesByIdentifier = this.fetchScopesByIdentifierForElement(element);
+      var scope = scopesByIdentifier.get(identifier);
+      if (!scope) {
+        scope = new Scope(this.schema, identifier, element);
+        scopesByIdentifier.set(identifier, scope);
+      }
+      return scope;
+    };
+    ScopeObserver.prototype.elementMatchedValue = function(element, value) {
+      var referenceCount = (this.scopeReferenceCounts.get(value) || 0) + 1;
+      this.scopeReferenceCounts.set(value, referenceCount);
+      if (referenceCount == 1) {
+        this.delegate.scopeConnected(value);
+      }
+    };
+    ScopeObserver.prototype.elementUnmatchedValue = function(element, value) {
+      var referenceCount = this.scopeReferenceCounts.get(value);
+      if (referenceCount) {
+        this.scopeReferenceCounts.set(value, referenceCount - 1);
+        if (referenceCount == 1) {
+          this.delegate.scopeDisconnected(value);
+        }
+      }
+    };
+    ScopeObserver.prototype.fetchScopesByIdentifierForElement = function(element) {
+      var scopesByIdentifier = this.scopesByIdentifierByElement.get(element);
+      if (!scopesByIdentifier) {
+        scopesByIdentifier = new Map();
+        this.scopesByIdentifierByElement.set(element, scopesByIdentifier);
+      }
+      return scopesByIdentifier;
+    };
+    return ScopeObserver;
+  }();
+  var Router = function() {
+    function Router(application) {
+      this.application = application;
+      this.scopeObserver = new ScopeObserver(this.element, this.schema, this);
+      this.scopesByIdentifier = new Multimap();
+      this.modulesByIdentifier = new Map();
+    }
+    Object.defineProperty(Router.prototype, "element", {
+      get: function() {
+        return this.application.element;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Router.prototype, "schema", {
+      get: function() {
+        return this.application.schema;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Router.prototype, "controllerAttribute", {
+      get: function() {
+        return this.schema.controllerAttribute;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Router.prototype, "modules", {
+      get: function() {
+        return Array.from(this.modulesByIdentifier.values());
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Router.prototype, "contexts", {
+      get: function() {
+        return this.modules.reduce(function(contexts, module) {
+          return contexts.concat(module.contexts);
+        }, []);
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Router.prototype.start = function() {
+      this.scopeObserver.start();
+    };
+    Router.prototype.stop = function() {
+      this.scopeObserver.stop();
+    };
+    Router.prototype.loadDefinition = function(definition) {
+      this.unloadIdentifier(definition.identifier);
+      var module = new Module(this.application, definition);
+      this.connectModule(module);
+    };
+    Router.prototype.unloadIdentifier = function(identifier) {
+      var module = this.modulesByIdentifier.get(identifier);
+      if (module) {
+        this.disconnectModule(module);
+      }
+    };
+    Router.prototype.getContextForElementAndIdentifier = function(element, identifier) {
+      var module = this.modulesByIdentifier.get(identifier);
+      if (module) {
+        return module.contexts.find(function(context) {
+          return context.element == element;
+        });
+      }
+    };
+    Router.prototype.handleError = function(error, message, detail) {
+      this.application.handleError(error, message, detail);
+    };
+    Router.prototype.scopeConnected = function(scope) {
+      this.scopesByIdentifier.add(scope.identifier, scope);
+      var module = this.modulesByIdentifier.get(scope.identifier);
+      if (module) {
+        module.connectContextForScope(scope);
+      }
+    };
+    Router.prototype.scopeDisconnected = function(scope) {
+      this.scopesByIdentifier.delete(scope.identifier, scope);
+      var module = this.modulesByIdentifier.get(scope.identifier);
+      if (module) {
+        module.disconnectContextForScope(scope);
+      }
+    };
+    Router.prototype.connectModule = function(module) {
+      this.modulesByIdentifier.set(module.identifier, module);
+      var scopes = this.scopesByIdentifier.getValuesForKey(module.identifier);
+      scopes.forEach(function(scope) {
+        return module.connectContextForScope(scope);
+      });
+    };
+    Router.prototype.disconnectModule = function(module) {
+      this.modulesByIdentifier.delete(module.identifier);
+      var scopes = this.scopesByIdentifier.getValuesForKey(module.identifier);
+      scopes.forEach(function(scope) {
+        return module.disconnectContextForScope(scope);
+      });
+    };
+    return Router;
+  }();
+  var defaultSchema = {
+    controllerAttribute: "data-controller",
+    actionAttribute: "data-action",
+    targetAttribute: "data-target"
+  };
+  var __awaiter = undefined && undefined.__awaiter || function(thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator["throw"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : new P(function(resolve) {
+          resolve(result.value);
+        }).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+  var __generator = undefined && undefined.__generator || function(thisArg, body) {
+    var _ = {
+      label: 0,
+      sent: function() {
+        if (t[0] & 1) throw t[1];
+        return t[1];
+      },
+      trys: [],
+      ops: []
+    }, f, y, t, g;
+    return g = {
+      next: verb(0),
+      throw: verb(1),
+      return: verb(2)
+    }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+      return this;
+    }), g;
+    function verb(n) {
+      return function(v) {
+        return step([ n, v ]);
+      };
+    }
+    function step(op) {
+      if (f) throw new TypeError("Generator is already executing.");
+      while (_) try {
+        if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+        if (y = 0, t) op = [ 0, t.value ];
+        switch (op[0]) {
+         case 0:
+         case 1:
+          t = op;
+          break;
+
+         case 4:
+          _.label++;
+          return {
+            value: op[1],
+            done: false
+          };
+
+         case 5:
+          _.label++;
+          y = op[1];
+          op = [ 0 ];
+          continue;
+
+         case 7:
+          op = _.ops.pop();
+          _.trys.pop();
+          continue;
+
+         default:
+          if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+            _ = 0;
+            continue;
+          }
+          if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+            _.label = op[1];
+            break;
+          }
+          if (op[0] === 6 && _.label < t[1]) {
+            _.label = t[1];
+            t = op;
+            break;
+          }
+          if (t && _.label < t[2]) {
+            _.label = t[2];
+            _.ops.push(op);
+            break;
+          }
+          if (t[2]) _.ops.pop();
+          _.trys.pop();
+          continue;
+        }
+        op = body.call(thisArg, _);
+      } catch (e) {
+        op = [ 6, e ];
+        y = 0;
+      } finally {
+        f = t = 0;
+      }
+      if (op[0] & 5) throw op[1];
+      return {
+        value: op[0] ? op[1] : void 0,
+        done: true
+      };
+    }
+  };
+  var Application = function() {
+    function Application(element, schema) {
+      if (element === void 0) {
+        element = document.documentElement;
+      }
+      if (schema === void 0) {
+        schema = defaultSchema;
+      }
+      this.element = element;
+      this.schema = schema;
+      this.dispatcher = new Dispatcher(this);
+      this.router = new Router(this);
+    }
+    Application.start = function(element, schema) {
+      var application = new Application(element, schema);
+      application.start();
+      return application;
+    };
+    Application.prototype.start = function() {
+      return __awaiter(this, void 0, void 0, function() {
+        return __generator(this, function(_a) {
+          switch (_a.label) {
+           case 0:
+            return [ 4, domReady() ];
+
+           case 1:
+            _a.sent();
+            this.router.start();
+            this.dispatcher.start();
+            return [ 2 ];
+          }
+        });
+      });
+    };
+    Application.prototype.stop = function() {
+      this.router.stop();
+      this.dispatcher.stop();
+    };
+    Application.prototype.register = function(identifier, controllerConstructor) {
+      this.load({
+        identifier: identifier,
+        controllerConstructor: controllerConstructor
+      });
+    };
+    Application.prototype.load = function(head) {
+      var _this = this;
+      var rest = [];
+      for (var _i = 1; _i < arguments.length; _i++) {
+        rest[_i - 1] = arguments[_i];
+      }
+      var definitions = Array.isArray(head) ? head : [ head ].concat(rest);
+      definitions.forEach(function(definition) {
+        return _this.router.loadDefinition(definition);
+      });
+    };
+    Application.prototype.unload = function(head) {
+      var _this = this;
+      var rest = [];
+      for (var _i = 1; _i < arguments.length; _i++) {
+        rest[_i - 1] = arguments[_i];
+      }
+      var identifiers = Array.isArray(head) ? head : [ head ].concat(rest);
+      identifiers.forEach(function(identifier) {
+        return _this.router.unloadIdentifier(identifier);
+      });
+    };
+    Object.defineProperty(Application.prototype, "controllers", {
+      get: function() {
+        return this.router.contexts.map(function(context) {
+          return context.controller;
+        });
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Application.prototype.getControllerForElementAndIdentifier = function(element, identifier) {
+      var context = this.router.getContextForElementAndIdentifier(element, identifier);
+      return context ? context.controller : null;
+    };
+    Application.prototype.handleError = function(error, message, detail) {
+      console.error("%s\n\n%o\n\n%o", message, error, detail);
+    };
+    return Application;
+  }();
+  function domReady() {
+    return new Promise(function(resolve) {
+      if (document.readyState == "loading") {
+        document.addEventListener("DOMContentLoaded", resolve);
+      } else {
+        resolve();
+      }
+    });
+  }
+  function defineTargetProperties(constructor) {
+    var prototype = constructor.prototype;
+    var targetNames = getTargetNamesForConstructor(constructor);
+    targetNames.forEach(function(name) {
+      var _a;
+      return defineLinkedProperties(prototype, (_a = {}, _a[name + "Target"] = {
+        get: function() {
+          var target = this.targets.find(name);
+          if (target) {
+            return target;
+          } else {
+            throw new Error('Missing target element "' + this.identifier + "." + name + '"');
+          }
+        }
+      }, _a[name + "Targets"] = {
+        get: function() {
+          return this.targets.findAll(name);
+        }
+      }, _a["has" + capitalize(name) + "Target"] = {
+        get: function() {
+          return this.targets.has(name);
+        }
+      }, _a));
+    });
+  }
+  function getTargetNamesForConstructor(constructor) {
+    var ancestors = getAncestorsForConstructor(constructor);
+    return Array.from(ancestors.reduce(function(targetNames, constructor) {
+      getOwnTargetNamesForConstructor(constructor).forEach(function(name) {
+        return targetNames.add(name);
+      });
+      return targetNames;
+    }, new Set()));
+  }
+  function getAncestorsForConstructor(constructor) {
+    var ancestors = [];
+    while (constructor) {
+      ancestors.push(constructor);
+      constructor = Object.getPrototypeOf(constructor);
+    }
+    return ancestors;
+  }
+  function getOwnTargetNamesForConstructor(constructor) {
+    var definition = constructor["targets"];
+    return Array.isArray(definition) ? definition : [];
+  }
+  function defineLinkedProperties(object, properties) {
+    Object.keys(properties).forEach(function(name) {
+      if (!(name in object)) {
+        var descriptor = properties[name];
+        Object.defineProperty(object, name, descriptor);
+      }
+    });
+  }
+  function capitalize(name) {
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
+  var Controller = function() {
+    function Controller(context) {
+      this.context = context;
+    }
+    Controller.bless = function() {
+      defineTargetProperties(this);
+    };
+    Object.defineProperty(Controller.prototype, "application", {
+      get: function() {
+        return this.context.application;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Controller.prototype, "scope", {
+      get: function() {
+        return this.context.scope;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Controller.prototype, "element", {
+      get: function() {
+        return this.scope.element;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Controller.prototype, "identifier", {
+      get: function() {
+        return this.scope.identifier;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Controller.prototype, "targets", {
+      get: function() {
+        return this.scope.targets;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(Controller.prototype, "data", {
+      get: function() {
+        return this.scope.data;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Controller.prototype.initialize = function() {};
+    Controller.prototype.connect = function() {};
+    Controller.prototype.disconnect = function() {};
+    Controller.targets = [];
+    return Controller;
+  }();
+  exports.Application = Application;
+  exports.Context = Context;
+  exports.Controller = Controller;
+  exports.defaultSchema = defaultSchema;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+});
