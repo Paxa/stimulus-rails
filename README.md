@@ -1,5 +1,16 @@
 # stimulus-rails
 
+# DEPRECATED
+
+Please use https://github.com/hotwired/stimulus-rails
+
+If you still depend on this gem - install from github
+```
+gem 'stimulus-rails', github: 'Paxa/stimulus-rails'
+```
+
+---
+
 Integrates [Stimulus](https://stimulusjs.org/) with the rails asset pipeline.
 
 A modest JavaScript framework for the HTML you already have.
